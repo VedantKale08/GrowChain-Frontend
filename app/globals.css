@@ -29,9 +29,7 @@
 }
 
 /* Input Fields */
-input[type="text"],
-input[type="email"],
-input[type="number"] {
+.register-input{
   padding: 1rem;
   border: 1px solid #d1d5db; /* Light gray */
   border-radius: 8px;
@@ -40,9 +38,7 @@ input[type="number"] {
   transition: all 0.3s ease-in-out;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="number"]:focus {
+.register-input{
   border-color: #38a169; /* Green */
   box-shadow: 0 0 0 2px rgba(56, 161, 105, 0.3); /* Light green shadow */
 }
@@ -125,5 +121,5 @@ input[type="number"]:focus {
 }
 
 .w-full-custom{
-    width: 100%  !important;
+    /* width: 100%  !important; */
 }
