@@ -12,7 +12,7 @@ function Home() {
           <input
             type="text"
             placeholder="Search"
-            className="w-full outline-none"
+            className="w-full outline-none border-none"
           />
         </div>
 
