@@ -9,6 +9,8 @@ import {
   LogOut,
   MessageSquareQuote,
   User,
+  Book,
+  BookAIcon,
 } from "lucide-react";
 import "aos/dist/aos.css";
 import Image from "next/image";
@@ -26,10 +28,11 @@ const SideBar = () => {
       { name: "Dashboard", icon: LayoutDashboard, link: "/dashboard" },
       { name: "Rewards", icon: HandCoins, link: "/rewards" },
       {
-        name: "Recommendations",
+        name: "Insights",
         icon: MessageSquareQuote,
         link: "/recommendations",
       },
+      {name: "Guidelines", icon:BookAIcon, link: "/guidelines" },
       { name: "Profile", icon: User, link: "/profile" },
     ],
     []
