@@ -43,13 +43,13 @@ const SideBar = () => {
   );
   return (
     <div className="border h-screen sticky top-0 flex flex-col gap-5 bg-white">
-      <Image
-        src="/next.svg"
+      <img
+        src="/assets/Images/GrowChain(1).png"
         alt=""
-        className="w-[70%] px-6 py-4 text-primary"
+        className="w-full px-6 py-4"
         width={0}
         height={0}
-      ></Image>
+      ></img>
       <div className="p-2 flex flex-col gap-3">
         {tabs.map((tabObj, i) => (
           <Link
