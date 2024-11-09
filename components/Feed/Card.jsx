@@ -2,13 +2,22 @@ import AOS from 'aos';
 import React, { useEffect } from 'react'
 
 function Card({data}) {
+  let map = {
+    Wheat:
+      "https://img.freepik.com/free-photo/beautiful-shot-whet-field-with-cloudy-sky_181624-26320.jpg",
+    Corn: "/assets/Images/crops.jpg",
+    Ragi: "https://www.agrifarming.in/wp-content/uploads/Guide-to-Finger-Millet-Cultivation-2.jpg",
+    Millet: "https://www.zettafarms.com/wp-content/uploads/2024/01/blog-7.jpg",
+    Barley:
+      "https://images.pexels.com/photos/29021995/pexels-photo-29021995/free-photo-of-scenic-barley-field-under-vibrant-blue-sky.png?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  };
   useEffect(() => {
     AOS.init({ duration: 400 });
   }, []);
   return (
     <div className="bg-white p-8 rounded-2xl" data-aos="fade-up">
       <img
-        src="/assets/Images/crops.jpg"
+        src={map[data]}
         alt=""
         className="rounded-xl w-full h-[300px] object-cover"
       />
