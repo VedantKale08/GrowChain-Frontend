@@ -2,8 +2,9 @@
 import React, { createContext, useState, useEffect } from "react";
 import { contractAbi, contractAddress } from "../utils/constants";
 import toast from "react-hot-toast";
-import { ethers } from "ethers";
+// import { ethers } from "ethers";
 import { useRouter } from "next/navigation";
+import { ethers } from "ethers";
 
 export const TransactionContext = createContext();
 
@@ -25,13 +26,11 @@ export const TransactionProvider = ({ children }) => {
       try {
         const { ethereum } = window;
         if (!ethereum) return alert("Please install MetaMask!");
-
         const accounts = await ethereum.request({
           method: "eth_requestAccounts",
         });
         setCurrentAccount(accounts[0]);
-        toast.success("Wallet Connected Successfully");
-        router.push("/role");
+        // toast.success("Wallet Connected Successfully");
       } catch (error) {
         console.error("Wallet connection failed", error);
         toast.error("Unable to connect the wallet");
@@ -69,7 +68,8 @@ export const TransactionProvider = ({ children }) => {
   const donateAmount = async (donationAmount) => {
     try {
       const contract = getContract();
-      const tx = await contract.donate(owner, {
+      // console.log(owner);
+      const tx = await contract.donate({
         value: ethers.utils.parseEther(donationAmount),
       });
       await tx.wait();
@@ -91,23 +91,29 @@ export const TransactionProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    const init = async () => {
-      const { ethereum } = window;
-      if (ethereum) {
-        window.ethereum.on("chainChanged", () => {
-          window.location.reload();
-        });
+  // useEffect(() => {
+  //   const init = async () => {
+  //     const { ethereum } = window;
+  //     if (ethereum) {
+  //       window.ethereum.on("chainChanged", () => {
+  //         window.location.reload();
+  //       });
 
-        window.ethereum.on("accountsChanged", () => {
-          window.location.reload();
-        });
-        const accounts = await ethereum.request({ method: "eth_accounts" });
-        if (accounts.length) setCurrentAccount(accounts[0]);
-      }
-    };
-    init();
-  }, []);
+  //       window.ethereum.on("accountsChanged", () => {
+  //         window.location.reload();
+  //       });
+  //       const accounts = await ethereum.request({ method: "eth_accounts" });
+  //       if (accounts.length) setCurrentAccount(accounts[0]);
+  //     }
+  //   };
+  //   init();
+  // }, []);
+
+  useEffect(() => {
+    if (currentAccount) {
+      toast.success("Wallet Connected Successfully");
+    }
+  }, [currentAccount]);
 
   return (
     <TransactionContext.Provider

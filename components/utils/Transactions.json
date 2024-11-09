@@ -50,13 +50,7 @@
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-            }
-        ],
+        "inputs": [],
         "name": "donate",
         "outputs": [],
         "stateMutability": "payable",
