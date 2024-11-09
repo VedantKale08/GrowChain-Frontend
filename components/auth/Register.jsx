@@ -11,11 +11,11 @@ const Register = () => {
 
   // Available crops with images
   const crops = [
-    { name: "Wheat", imageUrl: "/assets/images/wheat.png" },
-    { name: "Ragi", imageUrl: "/assets/images/ragi.png" },
-    { name: "Corn", imageUrl: "/assets/images/corn.png" },
-    { name: "Barley", imageUrl: "/assets/images/barley.png" },
-    { name: "Millet", imageUrl: "/assets/images/millet.png" },
+    { name: "Wheat", imageUrl: "/assets/Images/wheat.png" },
+    { name: "Ragi", imageUrl: "/assets/Images/ragi.png" },
+    { name: "Corn", imageUrl: "/assets/Images/corn.png" },
+    { name: "Barley", imageUrl: "/assets/Images/barley.png" },
+    { name: "Millet", imageUrl: "/assets/Images/millet.png" },
   ];
 
   const handleChange = (e) => {
@@ -67,7 +67,7 @@ const Register = () => {
                   placeholder="First Name"
                   value={formData.firstName}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-4 focus:ring-green-400 w-1/2"
+                  className="register-input border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-4 focus:ring-green-400 w-1/2"
                 />
                 <input
                   type="text"
@@ -75,7 +75,7 @@ const Register = () => {
                   placeholder="Last Name"
                   value={formData.lastName}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-4 focus:ring-green-400 w-1/2"
+                  className="register-input border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-4 focus:ring-green-400 w-1/2"
                 />
               </div>
               <input
@@ -84,7 +84,7 @@ const Register = () => {
                 placeholder="Phone Number"
                 value={formData.phoneNumber}
                 onChange={handleChange}
-                className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-green-500 w-full"
+                className="register-input border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-green-500 w-full"
               />
             </div>
 

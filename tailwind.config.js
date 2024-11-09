@@ -10,7 +10,7 @@ module.exports = {
       colors: {
         secondary: "#189976",
         primary: "#083730",
-        reward: "#04d806"
+        reward: "rgb(29, 155, 31)",
       },
     },
   },
