@@ -13,6 +13,7 @@ export const TransactionProvider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [isOwner, setIsOwner] = useState(false);
   const [owner, setOwner] = useState("");
+  const [ownerBalance, setOwnerBalance] = useState("");
 
   // Helper function to get the contract instance
   const getContract = () => {
@@ -80,11 +81,23 @@ export const TransactionProvider = ({ children }) => {
     }
   };
 
-  const trackProgress = async () => {
+  const trackProgress = async (activityHash) => {
     try {
       const contract = getContract();
-      await contract.trackPractice();
+      await contract.trackPractice(activityHash);
       toast.success("Progress tracked successfully!");
+    } catch (error) {
+      toast.error("Transaction failed");
+      console.error("Transaction error:", error);
+    }
+  };
+
+  const fetchOwnerBalance = async () => {
+    try {
+      const contract = getContract();
+      const ownerBalance = await contract.contractBalance();
+      setOwnerBalance(ownerBalance);
+      console.log("Owner's balance fetched successfully");
     } catch (error) {
       toast.error("Transaction failed");
       console.error("Transaction error:", error);
@@ -127,6 +140,8 @@ export const TransactionProvider = ({ children }) => {
         setIsOwner,
         donateAmount,
         owner,
+        fetchOwnerBalance,
+        ownerBalance,
       }}
     >
       {children}
