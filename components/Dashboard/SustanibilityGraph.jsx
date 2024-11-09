@@ -23,8 +23,8 @@ function SustanibilityGraph() {
     const ctx = chartRef.current.getContext("2d");
 
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, "rgba(75, 192, 192, 0.6)");
-    gradient.addColorStop(1, "rgba(75, 192, 192, 0)");
+    gradient.addColorStop(0, "rgb(24, 153, 118, 0.6)");
+    gradient.addColorStop(1, "rgb(24, 153, 118, 0)");
 
     const data = {
       labels: [
@@ -40,14 +40,14 @@ function SustanibilityGraph() {
         "Week 10",
         "Week 11",
         "Week 12",
-      ], 
+      ],
       datasets: [
         {
           label: "Sustainability Score",
-          data: [70, 72, 75, 78, 77, 79, 80, 82, 85, 87, 88, 90],
-          fill: true, 
+          data: [70, 72, 25, 48, 77, 59, 70, 22, 111, 27, 78, 90],
+          fill: true,
           backgroundColor: gradient,
-          borderColor: "rgba(75, 192, 192, 1)",
+          borderColor: "#189976",
           borderWidth: 2,
           pointRadius: 3,
         },
