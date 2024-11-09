@@ -1,20 +1,26 @@
 "use client";
 import React, { createContext, useState, useEffect } from "react";
-import { contractAbi, contractAddress } from "./utils/constants";
+import { contractAbi, contractAddress } from "../utils/constants";
 import toast from "react-hot-toast";
 import { ethers } from "ethers";
-import { useWinnerStore } from "@/store/winnerStore";
+import { useRouter } from "next/navigation";
 
 export const TransactionContext = createContext();
 
 export const TransactionProvider = ({ children }) => {
+  const router = useRouter();
   const [currentAccount, setCurrentAccount] = useState("");
   const [isOwner, setIsOwner] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // New isLoading state
-  const { setWinners } = useWinnerStore();
+  const [owner, setOwner] = useState("");
+
+  // Helper function to get the contract instance
+  const getContract = () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    return new ethers.Contract(contractAddress, contractAbi, signer);
+  };
 
   const connectWallet = async () => {
-    setIsLoading(true); // Set loading true
     if (typeof window !== "undefined" && window.ethereum) {
       try {
         const { ethereum } = window;
@@ -25,59 +31,49 @@ export const TransactionProvider = ({ children }) => {
         });
         setCurrentAccount(accounts[0]);
         toast.success("Wallet Connected Successfully");
+        router.push("/role");
       } catch (error) {
         console.error("Wallet connection failed", error);
         toast.error("Unable to connect the wallet");
         throw new Error("No Ethereum account found");
-      } finally {
-        setIsLoading(false); // Set loading false
       }
     }
   };
 
   const fetchContractDetails = async () => {
-    setIsLoading(true); // Set loading true
     try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        contractAddress,
-        contractAbi,
-        signer
-      );
-
+      const contract = getContract();
       const contractOwner = await contract.admin();
+      setOwner(contractOwner);
       setIsOwner(contractOwner.toLowerCase() === currentAccount.toLowerCase());
     } catch (error) {
       console.error("Error fetching contract details:", error);
       toast.error("Failed to fetch contract details");
-    } finally {
-      setIsLoading(false); // Set loading false
     }
   };
 
-  const sendTransaction = async () => {
+  const provideReward = async () => {
     try {
-      const { ethereum } = window;
-      if (!ethereum)
-        return alert("MetaMask is required to complete this action.");
-
-      const provider = new ethers.providers.Web3Provider(ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        contractAddress,
-        contractAbi,
-        signer
-      );
-
-      const name = localStorage.getItem("userName");
-      const tx = await contract.buyTicket(name, {
-        value: ethers.utils.parseEther("0.005"),
+      const contract = getContract();
+      const tx = await contract.provideReward(currentAccount, {
+        value: ethers.utils.parseEther("1"),
       });
       await tx.wait();
-      getParticipantCount();
-      // setIsLoading(false); // Set loading false
-      toast.success("Ticket purchased successfully!");
+      toast.success("Reward sent successfully!");
+    } catch (error) {
+      toast.error("Transaction failed");
+      console.error("Transaction error:", error);
+    }
+  };
+
+  const donateAmount = async (donationAmount) => {
+    try {
+      const contract = getContract();
+      const tx = await contract.donate(owner, {
+        value: ethers.utils.parseEther(donationAmount),
+      });
+      await tx.wait();
+      toast.success("Donation sent successfully!");
     } catch (error) {
       toast.error("Transaction failed");
       console.error("Transaction error:", error);
@@ -86,17 +82,9 @@ export const TransactionProvider = ({ children }) => {
 
   const trackProgress = async () => {
     try {
-      const { ethereum } = window;
-      if (!ethereum)
-        return alert("MetaMask is required to complete this action.");
-
-      const provider = new ethers.providers.Web3Provider(ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        contractAddress,
-        contractAbi,
-        signer
-      );
+      const contract = getContract();
+      await contract.trackPractice();
+      toast.success("Progress tracked successfully!");
     } catch (error) {
       toast.error("Transaction failed");
       console.error("Transaction error:", error);
@@ -125,14 +113,14 @@ export const TransactionProvider = ({ children }) => {
     <TransactionContext.Provider
       value={{
         connectWallet,
-        sendTransaction,
+        provideReward,
         currentAccount,
+        trackProgress,
         fetchContractDetails,
         isOwner,
-        isLotteryOpen,
-        setIsLotteryOpen,
         setIsOwner,
-        isLoading, // Include isLoading in context value
+        donateAmount,
+        owner,
       }}
     >
       {children}
