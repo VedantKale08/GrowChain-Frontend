@@ -4,14 +4,35 @@ import Lottie from "lottie-react";
 import animationData from "../public/assets/Lottie/LandingLottie.json";
 import { TransactionContext } from "@/components/context/context";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { userStore } from "@/store/userStore";
+import {
+  getCookies,
+  setCookie,
+} from "cookies-next/client";
 
 const Landing = () => {
   const { connectWallet } = useContext(TransactionContext);
+const setUser = userStore((state) => state.setUser);
   const router = useRouter();
   const handleLogin = async () => {
-    await connectWallet();
-    router.push("/role");
+    let currentAccount = await connectWallet();    
+
+    try {      
+      const response = await axios.get(`http://localhost:5000/api/farmers/${currentAccount}`);
+
+      setCookie('address',currentAccount);
+      if (response?.data || response?.data?.length !== 0) {
+        router.push("/feed");
+        setCookie("userData", JSON.stringify(response.data));
+      } else if (response.status === 404) {
+        router.push("/role");
+      }
+    } catch (error) {
+      console.error("Error checking user existence:", error);
+    }
   };
+
   return (
     <div className="flex flex-col items-center h-screen">
       {/* Lottie Animation */}
