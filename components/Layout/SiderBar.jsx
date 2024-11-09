@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import { tabsStore } from "@/store/tabStore";
 import {
   BellRing,
@@ -9,44 +10,31 @@ import {
   MessageSquareQuote,
   User,
 } from "lucide-react";
+import "aos/dist/aos.css";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
 
 const SideBar = () => {
+
   const [popup, setPopup] = useState(false);
   const setTab = tabsStore((state) => state.setTab);
   const tab = tabsStore((state) => state.tab);
   const tabs = useMemo(
     () => [
-      {
-        name: "Home",
-        icon: Home,
-        link: "/feed",
-      },
-      {
-        name: "Dashboard",
-        icon: LayoutDashboard,
-        link: "/dashboard",
-      },
-      {
-        name: "Rewards",
-        icon: HandCoins,
-        link: "/rewards",
-      },
-      {
-        name: "Profile",
-        icon: User,
-        link: "/profile",
-      },
+      { name: "Home", icon: Home, link: "/feed" },
+      { name: "Dashboard", icon: LayoutDashboard, link: "/dashboard" },
+      { name: "Rewards", icon: HandCoins, link: "/rewards" },
       {
         name: "Recommendations",
         icon: MessageSquareQuote,
         link: "/recommendations",
       },
+      { name: "Profile", icon: User, link: "/profile" },
     ],
     []
   );
+
   return (
     <div className="border h-screen sticky top-0 flex flex-col gap-5 bg-white">
       <img
@@ -55,8 +43,8 @@ const SideBar = () => {
         className="w-full px-6 py-4"
         width={0}
         height={0}
-      ></img>
-      <div className="p-2 flex flex-col gap-3">
+      />
+      <div className="p-2 flex flex-col gap-3" >
         {tabs.map((tabObj, i) => (
           <Link
             key={i}
@@ -73,7 +61,9 @@ const SideBar = () => {
           </Link>
         ))}
       </div>
-      <div className="flex flex-col gap-2 flex-1 p-2 justify-end">
+      <div
+        className="flex flex-col gap-2 flex-1 p-2 justify-end"
+      >
         <button
           style={{
             color: "white",
@@ -87,10 +77,7 @@ const SideBar = () => {
         >
           Scan Plant
         </button>
-        <div
-          className="flex w-full gap-3 p-2 items-center transition-all hover:bg-gray-200 cursor-pointer rounded-md mb-4"
-          // onClick={logoutUser}
-        >
+        <div className="flex w-full gap-3 p-2 items-center transition-all hover:bg-gray-200 cursor-pointer rounded-md mb-4">
           <LogOut size={25} />
           <p className="text-lg">Log out</p>
         </div>

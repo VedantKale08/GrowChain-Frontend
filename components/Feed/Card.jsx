@@ -1,8 +1,12 @@
-import React from 'react'
+import AOS from 'aos';
+import React, { useEffect } from 'react'
 
 function Card() {
+  useEffect(() => {
+    AOS.init({ duration: 400 });
+  }, []);
   return (
-    <div className="bg-white p-8 rounded-2xl">
+    <div className="bg-white p-8 rounded-2xl" data-aos="fade-up">
       <img
         src="/assets/Images/crops.jpg"
         alt=""
