@@ -1,15 +1,17 @@
 "use client"
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ExpertList from "./ExpertList";
 import { Search } from "lucide-react";
 import Card from "./Card";
 import AOS from "aos";
-
+import { getCookie, setCookie } from "cookies-next/client";
 function Home() {
+  const [user, setUser] = useState();
   useEffect(() => {
     AOS.init({ duration: 400 });
+    setUser(JSON.parse(getCookie('userData')));
   }, []);
-
+  
   return (
     <div className="relative flex p-6">
       <div className="flex-1 flex flex-col gap-7 px-12 pr-20">
@@ -24,8 +26,8 @@ function Home() {
 
         {/* Cards */}
         <div className="flex flex-col gap-7">
-          {[1, 2, 3, 4, 5, 6].map((item) => (
-            <Card key={item} />
+          {user && user.selectedCrops.map((item, index) => (
+            <Card key={index} data={item}/>
           ))}
         </div>
       </div>

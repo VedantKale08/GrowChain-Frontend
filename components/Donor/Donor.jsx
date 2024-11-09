@@ -1,14 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Image from "next/image"; // Next.js Image component for optimized image rendering
 import ether from "../../public/assets/Images/ether.png";
+import { TransactionContext } from "../context/context";
 
 const Donor = () => {
   const [amount, setAmount] = useState("");
-
-  const handleDonate = () => {
-    alert(`Thank you for donating ${amount} ETH!`);
-  };
+  const { donateAmount } = useContext(TransactionContext);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-100 to-green-400 flex items-center justify-center">
@@ -22,7 +20,10 @@ const Donor = () => {
 
         <div className="mt-6">
           {/* Donation Amount Input */}
-          <label htmlFor="amount" className="block text-gray-700 text-lg font-medium">
+          <label
+            htmlFor="amount"
+            className="block text-gray-700 text-lg font-medium"
+          >
             Enter Donation Amount (ETH)
           </label>
           <div className="relative mt-2">
@@ -47,7 +48,7 @@ const Donor = () => {
         <div className="mt-6 flex justify-center">
           {/* Donate Button */}
           <button
-            onClick={handleDonate}
+            onClick={() => donateAmount(amount)}
             className="px-6 py-3 bg-green-600 text-white text-lg font-semibold rounded-lg shadow-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400"
           >
             Donate Now

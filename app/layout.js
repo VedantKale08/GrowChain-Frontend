@@ -1,5 +1,8 @@
 import localFont from "next/font/local";
 import "./globals.css";
+import { TransactionProvider } from "@/components/context/context";
+import { Toaster } from "react-hot-toast";
+import NextTopLoader from "nextjs-toploader";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -20,11 +23,15 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-200`}
-      >
-        {children}
-      </body>
+      <TransactionProvider>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-200`}
+        >
+          <NextTopLoader />
+          <Toaster position="top-right" reverseOrder={false} />
+          {children}
+        </body>
+      </TransactionProvider>
     </html>
   );
 }
