@@ -6,6 +6,7 @@ import {
   Home,
   LayoutDashboard,
   LogOut,
+  MessageSquareQuote,
   User,
 } from "lucide-react";
 import Image from "next/image";
@@ -21,22 +22,27 @@ const SideBar = () => {
       {
         name: "Home",
         icon: Home,
-        link:"/feed"
+        link: "/feed",
       },
       {
         name: "Dashboard",
         icon: LayoutDashboard,
-        link:"/dashboard"
+        link: "/dashboard",
       },
       {
         name: "Rewards",
         icon: HandCoins,
-        link:"/rewards"
+        link: "/rewards",
       },
       {
         name: "Profile",
         icon: User,
-        link:"/profile"
+        link: "/profile",
+      },
+      {
+        name: "Recommendations",
+        icon: MessageSquareQuote,
+        link: "/recommendations",
       },
     ],
     []

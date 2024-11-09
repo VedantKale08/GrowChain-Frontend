@@ -24,14 +24,12 @@ function Navbar() {
           className="flex items-center gap-3 cursor-pointer"
           onClick={() => setTab("Profile")}
         >
-          {/* <img
-            src={`https://gateway.pinata.cloud/ipfs${user?.data?.image?.substring(
-              6
-            )}`}
+          <img
+            src={`/assets/Images/farmerIcon.png`}
             alt=""
             className="w-12 h-12 rounded-full"
-          ></img> */}
-          <div className="bg-orange-500 w-10 h-10 rounded-full"></div>
+          ></img>
+          {/* <div className="bg-orange-500 w-10 h-10 rounded-full"></div> */}
           <p className="text-lg">Vedant Kale</p>
         </div>
       </div>
