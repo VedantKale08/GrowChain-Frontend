@@ -19,6 +19,7 @@ const SideBar = () => {
   const [popup, setPopup] = useState(false);
   const setTab = tabsStore((state) => state.setTab);
   const tab = tabsStore((state) => state.tab);
+
   const tabs = useMemo(
     () => [
       { name: "Home", icon: Home, link: "/feed" },

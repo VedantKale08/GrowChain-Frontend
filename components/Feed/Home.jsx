@@ -9,7 +9,7 @@ function Home() {
   useEffect(() => {
     AOS.init({ duration: 400 });
   }, []);
-
+  
   return (
     <div className="relative flex p-6">
       <div className="flex-1 flex flex-col gap-7 px-12 pr-20">
