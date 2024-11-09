@@ -1,6 +1,6 @@
-import Dashboard from '@/components/Dashboard/Dashboard'
-import ParentContainer from '@/components/Layout/ParentContainer'
-import React from 'react'
+import Dashboard from "@/components/Dashboard/Dashboard";
+import ParentContainer from "@/components/Layout/ParentContainer";
+import React from "react";
 
 function page() {
   return (
@@ -12,4 +12,4 @@ function page() {
   );
 }
 
-export default page
+export default page;
