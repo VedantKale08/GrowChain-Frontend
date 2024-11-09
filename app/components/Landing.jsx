@@ -1,7 +1,8 @@
 "use client"
 import React from "react";
 import Lottie from "lottie-react";
-import animationData from "../assets/Lottie/LandingLottie.json";
+import animationData from "../../public/assets/Lottie/LandingLottie.json";
+
 
 const Landing = () => {
   return (
