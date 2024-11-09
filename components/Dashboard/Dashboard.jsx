@@ -89,7 +89,7 @@ function Dashboard() {
               <p className="text-lg">Soil Moisture</p>
             </div>
             <div className="mt-2 border border-black rounded-full px-3 py-1">
-              High
+              Low
             </div>
           </div>
         </div>
