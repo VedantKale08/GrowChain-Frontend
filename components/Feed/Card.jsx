@@ -1,5 +1,6 @@
 "use client";
 import AOS from "aos";
+import { Banana } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
@@ -13,10 +14,13 @@ function Card({ data }) {
     Millet: "https://www.zettafarms.com/wp-content/uploads/2024/01/blog-7.jpg",
     Barley:
       "https://images.pexels.com/photos/29021995/pexels-photo-29021995/free-photo-of-scenic-barley-field-under-vibrant-blue-sky.png?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      Apple:"/assets/Images/apple.png",
+      Banana:"/assets/Images/banana.png",
+      Kiwi:"/assets/Images/kiwi.png",
+      Litchi:"/assets/Images/litchi.png"
   };
   useEffect(() => {
     AOS.init({ duration: 400 });
-    console.log(data);
   }, []);
 
   return (
@@ -24,7 +28,7 @@ function Card({ data }) {
       className="bg-white p-8 rounded-2xl cursor-pointer"
       data-aos="fade-up"
       onClick={() => router.push(`/crop/${data}`)}
-    >
+    >      
       <img
         src={map[data]}
         alt=""

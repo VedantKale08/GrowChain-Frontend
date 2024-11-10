@@ -3,6 +3,7 @@ import "./globals.css";
 import { TransactionProvider } from "@/components/context/context";
 import { Toaster } from "react-hot-toast";
 import NextTopLoader from "nextjs-toploader";
+import AdvLayout from "@/components/Layout/AdvLayout";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,7 +30,7 @@ export default function RootLayout({ children }) {
         >
           <NextTopLoader />
           <Toaster position="top-right" reverseOrder={false} />
-          {children}
+          <AdvLayout>{ children }</AdvLayout>
         </body>
       </TransactionProvider>
     </html>
