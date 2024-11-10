@@ -16,26 +16,31 @@ import "aos/dist/aos.css";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { deleteCookie } from "cookies-next/client";
+import { useRouter } from "next/navigation";
 
 const SideBar = () => {
   const [popup, setPopup] = useState(false);
   const setTab = tabsStore((state) => state.setTab);
   const tab = tabsStore((state) => state.tab);
+  const router = useRouter();
 
+  const { t } = useTranslation();
   const tabs = useMemo(
     () => [
-      { name: "Home", icon: Home, link: "/feed" },
-      { name: "Dashboard", icon: LayoutDashboard, link: "/dashboard" },
-      { name: "Rewards", icon: HandCoins, link: "/rewards" },
+      { name: t("home"), icon: Home, link: "/feed" },
+      { name: t("dashboard"), icon: LayoutDashboard, link: "/dashboard" },
+      { name: t("rewards"), icon: HandCoins, link: "/rewards" },
       {
-        name: "Insights",
+        name: t("insights"),
         icon: MessageSquareQuote,
         link: "/recommendations",
       },
-      {name: "Guidelines", icon:BookAIcon, link: "/guidelines" },
-      { name: "Profile", icon: User, link: "/profile" },
+      { name: t("guidelines"), icon: BookAIcon, link: "/guidelines" },
+      { name: t("profile"), icon: User, link: "/profile" },
     ],
-    []
+    [t] // Include `t` in the dependency array to re-render on language change
   );
 
   return (
@@ -78,9 +83,15 @@ const SideBar = () => {
         >
           Scan Plant
         </button>
-        <div className="flex w-full gap-3 p-2 items-center transition-all hover:bg-gray-200 cursor-pointer rounded-md mb-4">
+        <div 
+        onClick={()=>{
+          deleteCookie("address");
+          deleteCookie("userData");
+          router.push("/")
+        }}
+        className="flex w-full gap-3 p-2 items-center transition-all hover:bg-gray-200 cursor-pointer rounded-md mb-4">
           <LogOut size={25} />
-          <p className="text-lg">Log out</p>
+          <p className="text-lg">{t("log_out")}</p>
         </div>
       </div>
     </div>
