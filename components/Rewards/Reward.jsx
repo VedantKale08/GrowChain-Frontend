@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const Reward = () => {
   const [rewards, setRewards] = useState([
@@ -13,6 +14,8 @@ const Reward = () => {
 
   ]);
 
+  const { t } = useTranslation();
+
   const handleClaim = (id) => {
     setRewards((prevRewards) =>
       prevRewards.map((reward) =>
@@ -24,7 +27,7 @@ const Reward = () => {
   return (
     <div className="min-h-screen bg-white p-8">
       <h1 className="text-4xl font-bold text-center text-primary mb-6">
-        Your Pending Rewards
+        {t("Your_Pending_Rewards")}
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {rewards.map((reward) => (
@@ -37,11 +40,10 @@ const Reward = () => {
             }`}
           >
             <div>
-
-            <h2 className="text-xl font-semibold text-primary">
-              {reward.description}
-            </h2>
-            <p className="text-gray-600 mt-2">{reward.amount}</p>
+              <h2 className="text-xl font-semibold text-primary">
+                {reward.description}
+              </h2>
+              <p className="text-gray-600 mt-2">{reward.amount}</p>
             </div>
             <button
               onClick={() => handleClaim(reward.id)}
@@ -52,7 +54,7 @@ const Reward = () => {
               }`}
               disabled={reward.isClaimed}
             >
-              {reward.isClaimed ? "Claimed" : "Claim Now"}
+              {reward.isClaimed ? t("claimed") : t("claim_now")}
             </button>
           </div>
         ))}
