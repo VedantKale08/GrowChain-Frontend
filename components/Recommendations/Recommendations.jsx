@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { FaLeaf, FaTint, FaSeedling } from "react-icons/fa";
 
 // Function to map quality score to category
@@ -104,33 +105,39 @@ const cropsData = [
   },
 ];
 
-const RecommendationsCard = ({ crop }) => (
-  <div style={styles.card}>
-    <div style={{ ...styles.header, backgroundImage: `url(${crop.imageUrl})` }}>
-      <div style={styles.overlay}>
-        <h2 style={styles.cardTitle}>{crop.name}</h2>
+const RecommendationsCard = ({ crop }) => {
+    const { t } = useTranslation();
+
+  return (
+    <div style={styles.card}>
+      <div
+        style={{ ...styles.header, backgroundImage: `url(${crop.imageUrl})` }}
+      >
+        <div style={styles.overlay}>
+          <h2 style={styles.cardTitle}>{crop.name}</h2>
+        </div>
+      </div>
+      <div style={styles.infoRow}>
+        <span>{t("quality")}:</span>{" "}
+        <span>{mapQualityToCategory(crop.quality)}</span>
+      </div>
+      <div style={styles.infoRow}>
+        <span>{t("moisture")}:</span> <span>{crop.moisturer}</span>
+      </div>
+      <div style={styles.infoRow}>
+        <span>{t("fertilizer")}:</span> <span>{crop.fertilizer}</span>
+      </div>
+      <div style={styles.infoRow}>
+        <span>{t("date")}:</span> <span>{crop.date}</span>
+      </div>
+      <div style={styles.recommendation}>
+        {crop.icon}
+        <span style={{ marginLeft: "8px" }}>{crop.recommendation}</span>
       </div>
     </div>
-    <div style={styles.infoRow}>
-      <span>Quality:</span> <span>{mapQualityToCategory(crop.quality)}</span>
-    </div>
-    <div style={styles.infoRow}>
-      <span>Moisture:</span> <span>{crop.moisturer}</span>
-    </div>
-    <div style={styles.infoRow}>
-      <span>Fertilizer:</span> <span>{crop.fertilizer}</span>
-    </div>
-    <div style={styles.infoRow}>
-      <span>Date:</span> <span>{crop.date}</span>
-    </div>
-    <div style={styles.recommendation}>
-      {crop.icon}
-      <span style={{ marginLeft: "8px" }}>{crop.recommendation}</span>
-    </div>
-  </div>
-);
+  );};
 
-const Recommendations = () => (
+const Recommendations = () => (  
   <div style={styles.container} className="grid-cols-4">
     {cropsData.map((crop, index) => (
       <RecommendationsCard key={index} crop={crop} />

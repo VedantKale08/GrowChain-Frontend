@@ -7,10 +7,12 @@ import TokenEarningsBreakdown from "./TokenEarningsBreakdown";
 import AOS from "aos";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 function Dashboard() {
   const [weatherData, setWeatherData] = useState();
   const [location, setLocation] = useState({ latitude: null, longitude: null });
+  const { t } = useTranslation();
 
   const getLocation = () => {
     if (navigator.geolocation) {
@@ -68,7 +70,7 @@ function Dashboard() {
               <div className="text-2xl font-bold">
                 +{weatherData?.temperatureAvg ?? 0}°C
               </div>
-              <p className="text-lg">Air Temp</p>
+              <p className="text-lg">{t("temperature")}</p>
             </div>
             <div className="mt-2 border border-black rounded-full px-3 py-1">
               Good
@@ -85,7 +87,7 @@ function Dashboard() {
               <div className="text-2xl font-bold">
                 {weatherData?.precipitationProbabilityAvg ?? 0}%
               </div>
-              <p className="text-lg">Soil Moisture</p>
+              <p className="text-lg">{t("soil_moisture")}</p>
             </div>
             <div className="mt-2 border border-black rounded-full px-3 py-1">
               Low
@@ -102,7 +104,7 @@ function Dashboard() {
               <div className="text-2xl font-bold">
                 {weatherData?.precipitationProbabilityAvg ?? 0}mm
               </div>
-              <p className="text-lg">Precipitation</p>
+              <p className="text-lg">{t("percipitation")}</p>
             </div>
             <div className="mt-2 border border-black rounded-full px-3 py-1">
               Low
@@ -114,7 +116,7 @@ function Dashboard() {
       {/* Existing Graphs Section */}
       <div className="flex gap-7">
         <div className="bg-white rounded-xl p-8 flex-1 w-full h-[450px]">
-          <p>Sustainability Analysis</p>
+          <p>{t("sustainability_analysis")}</p>
           <SustanibilityGraph />
         </div>
         <div className="bg-white rounded-xl p-8 w-[400px] h-[450px] flex flex-col items-center">
@@ -122,7 +124,7 @@ function Dashboard() {
         </div>
       </div>
       <div className="bg-white rounded-xl p-8 w-full h-[550px]">
-        <p>Sustainability Analysis</p>
+        <p>{t("Token_Earned_X_Week")}</p>
         <TokenEarningsBreakdown />
       </div>
     </div>
