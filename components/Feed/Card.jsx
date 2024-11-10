@@ -1,7 +1,10 @@
-import AOS from 'aos';
-import React, { useEffect } from 'react'
+"use client";
+import AOS from "aos";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
-function Card({data}) {
+function Card({ data }) {
+  const router = useRouter();
   let map = {
     Wheat:
       "https://img.freepik.com/free-photo/beautiful-shot-whet-field-with-cloudy-sky_181624-26320.jpg",
@@ -13,9 +16,15 @@ function Card({data}) {
   };
   useEffect(() => {
     AOS.init({ duration: 400 });
+    console.log(data);
   }, []);
+
   return (
-    <div className="bg-white p-8 rounded-2xl" data-aos="fade-up">
+    <div
+      className="bg-white p-8 rounded-2xl cursor-pointer"
+      data-aos="fade-up"
+      onClick={() => router.push(`/crop/${data}`)}
+    >
       <img
         src={map[data]}
         alt=""
@@ -38,4 +47,4 @@ function Card({data}) {
   );
 }
 
-export default Card
+export default Card;

@@ -29,10 +29,10 @@ export const TransactionProvider = ({ children }) => {
         if (!ethereum) return alert("Please install MetaMask!");
         const accounts = await ethereum.request({
           method: "eth_requestAccounts",
-        });        
+        });
+        // toast.success("Wallet Connected Successfully");
         setCurrentAccount(accounts[0]);
         return accounts[0];
-        // toast.success("Wallet Connected Successfully");
       } catch (error) {
         console.error("Wallet connection failed", error);
         toast.error("Unable to connect the wallet");
@@ -93,6 +93,16 @@ export const TransactionProvider = ({ children }) => {
     }
   };
 
+  const deletePreviousProgress = async (activityHash) => {
+    try {
+      const contract = getContract();
+      await contract.clearDailyActivities();
+    } catch (error) {
+      toast.error("Transaction failed");
+      console.error("Transaction error:", error);
+    }
+  };
+
   const fetchOwnerBalance = async () => {
     try {
       const contract = getContract();
@@ -143,6 +153,7 @@ export const TransactionProvider = ({ children }) => {
         owner,
         fetchOwnerBalance,
         ownerBalance,
+        deletePreviousProgress,
       }}
     >
       {children}

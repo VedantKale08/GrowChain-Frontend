@@ -31,16 +31,16 @@ function Dashboard() {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     getLocation();
-  },[])
+  }, []);
 
   useEffect(() => {
     AOS.init({ duration: 400 });
 
     const getWeatherData = async () => {
       try {
-        if(location.latitude){
+        if (location.latitude) {
           const response = await axios.get(
             `https://api.tomorrow.io/v4/weather/forecast?location=${location.latitude},${location.longitude}&apikey=OZarZjsufUBQ7oCi2hQxEghfJhNhb30H`
           );
@@ -53,8 +53,7 @@ function Dashboard() {
     getWeatherData();
   }, [location]);
   console.log(location);
-  
-  
+
   return (
     <div className="p-6 w-full flex flex-col gap-7">
       {/* New Weather Information Boxes */}
