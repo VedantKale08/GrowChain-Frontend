@@ -50,30 +50,28 @@ const Crop = () => {
 
       // Parse and process data from ML API
       const parsedData = response.data.map((item) => JSON.parse(item));
-       if (parsedData.length > 1) {
-         // Calculate averages if there are multiple crops
-         const averageValues = parsedData.reduce(
-           (acc, info) => {
-             acc.hydration += info.Hydration;
-             acc.quality += info.Quality;
-             acc.timeLeft += info.Time;
-             acc.count += 1;
-             return acc;
-           },
-           { hydration: 0, quality: 0, timeLeft: 0, count: 0 }
-         );
+      if (parsedData.length > 1) {
+        // Calculate averages if there are multiple crops
+        const averageValues = parsedData.reduce(
+          (acc, info) => {
+            acc.hydration += info.Hydration;
+            acc.quality += info.Quality;
+            acc.timeLeft += info.Time;
+            acc.count += 1;
+            return acc;
+          },
+          { hydration: 0, quality: 0, timeLeft: 0, count: 0 }
+        );
 
-         setAverageCropInfo({
-           CropType: "Average Data", // Label for averaged data
-           Hydration: (averageValues.hydration / averageValues.count).toFixed(
-             2
-           ),
-           Quality: (averageValues.quality / averageValues.count).toFixed(2),
-           Time: (averageValues.timeLeft / averageValues.count).toFixed(2),
-         });
-       } else if (parsedData.length === 1) {
-         setAverageCropInfo(parsedData[0]); // Only one crop, show it directly
-       }
+        setAverageCropInfo({
+          CropType: "Average Data", // Label for averaged data
+          Hydration: (averageValues.hydration / averageValues.count).toFixed(2),
+          Quality: (averageValues.quality / averageValues.count).toFixed(2),
+          Time: (averageValues.timeLeft / averageValues.count).toFixed(2),
+        });
+      } else if (parsedData.length === 1) {
+        setAverageCropInfo(parsedData[0]); // Only one crop, show it directly
+      }
 
       // Calculate averages for necessary fields
       const averageValues = parsedData.reduce(
@@ -103,15 +101,31 @@ const Crop = () => {
 
       setTimeout(async () => {
         const addActivityResponse = await axios.post(
-        "http://localhost:5000/api/activity/add",
-        activityData
-      );
+          "http://localhost:5000/api/activity/add",
+          activityData
+        );
 
-      console.log("Activity added successfully:", addActivityResponse.data);
+        console.log("Activity added successfully:", addActivityResponse.data);
+
+
+        const addSustainResponse = await axios.post(
+          "http://localhost:5000/api/farms/add-sustainibility",
+          {
+            farmerId: JSON.parse(getCookie("userData"))._id,
+            data: {
+              averageHydration: averageHydration,
+              averageQuality: averageQuality,
+            },
+          }
+        );
+
+        console.log(
+          "sustainibility added successfully:",
+          addSustainResponse.data
+        );
       }, 2000);
-      
     } catch (error) {
-      console.error("Error in analyzeImages function:", error);
+      console.log("Error in analyzeImages function:", error);
     }
   };
 
@@ -169,8 +183,8 @@ const Crop = () => {
           Analyze Crops
         </button>
       </div>
-          {console.log(averageCropInfo)}
-          
+      {console.log(averageCropInfo)}
+
       {averageCropInfo && (
         <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold mb-4">Crop Analysis Results</h2>

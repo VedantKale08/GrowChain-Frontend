@@ -18,54 +18,30 @@ Chart.register(
   BarController
 );
 
-function TokenEarningsBreakdown() {
+function TokenEarningsBreakdown({ averageQuality }) {
   const chartRef = useRef(null);
 
   useEffect(() => {
     const ctx = chartRef.current.getContext("2d");
 
+    let label = averageQuality.map((item, index) => "Week " + (parseInt(index) + 1));
+
+    // Function to generate a random green color
+    const getRandomGreen = () => {
+      const red = Math.floor(Math.random() * 50); 
+      const green = Math.floor(Math.random() * 256); 
+      const blue = Math.floor(Math.random() * 50);
+      return `rgba(${red}, ${green}, ${blue}, 0.5)`;
+    };
+
     const data = {
-      labels: [
-        "Week 1",
-        "Week 2",
-        "Week 3",
-        "Week 4",
-        "Week 5",
-        "Week 6",
-        "Week 7",
-        "Week 8",
-        "Week 9",
-        "Week 10",
-        "Week 11",
-      ],
+      labels: label,
       datasets: [
         {
           label: "Tokens Earned",
-          data: [100, 120, 150, 180, 140, 200, 120, 90, 80, 160, 290],
-          backgroundColor: [
-            "rgba(75, 192, 192, 0.7)",
-            "rgba(54, 162, 235, 0.7)",
-            "rgba(255, 206, 86, 0.7)",
-            "rgba(153, 102, 255, 0.7)",
-            "rgba(255, 159, 64, 0.7)",
-            "rgba(153, 102, 215, 0.7)",
-            "rgba(255, 129, 64, 0.7)",
-            "rgba(252, 159, 64, 0.7)",
-            "rgba(133, 102, 215, 0.7)",
-            "rgba(255, 129, 64, 0.7)",
-          ],
-          borderColor: [
-            "rgba(75, 192, 192, 1)",
-            "rgba(54, 162, 235, 1)",
-            "rgba(255, 206, 86, 1)",
-            "rgba(153, 102, 255, 1)",
-            "rgba(255, 159, 64, 1)",
-            "rgba(153, 102, 215, 0.7)",
-            "rgba(255, 129, 64, 0.7)",
-            "rgba(252, 159, 64, 1)",
-            "rgba(133, 102, 215, 0.7)",
-            "rgba(255, 129, 64, 0.7)",
-          ],
+          data: averageQuality,
+          backgroundColor: averageQuality.map(() => getRandomGreen()),
+          borderColor: averageQuality.map(() => "rgba(0, 128, 0, 1)"), 
           borderWidth: 1,
         },
       ],
@@ -105,7 +81,7 @@ function TokenEarningsBreakdown() {
     const myChart = new Chart(ctx, config);
 
     return () => myChart.destroy();
-  }, []);
+  }, [averageQuality]);
 
   return <canvas ref={chartRef} className="w-full-custom"></canvas>;
 }

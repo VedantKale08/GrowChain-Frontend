@@ -8,11 +8,15 @@ import AOS from "aos";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { getCookie } from "cookies-next";
 
 function Dashboard() {
   const [weatherData, setWeatherData] = useState();
+  const userData = JSON.parse(getCookie("userData"));
   const [location, setLocation] = useState({ latitude: null, longitude: null });
   const { t } = useTranslation();
+  const [averageHydration, setAverageHydration] = useState();
+  const [averageQuality, setAverageQuality] = useState();
 
   const getLocation = () => {
     if (navigator.geolocation) {
@@ -32,8 +36,6 @@ function Dashboard() {
       alert("Geolocation is not supported by this browser.");
     }
   };
-
-  console.log(weatherData);
   
 
   useEffect(() => {
@@ -57,7 +59,27 @@ function Dashboard() {
     };
     getWeatherData();
   }, [location]);
-  console.log(location);
+
+  useEffect(() => {
+    const getSustainbilityData = async () => {
+      try {
+          const response = await axios.get(
+            `http://localhost:5000/api/farms/get-sustainibility/`+userData._id
+          );
+
+          if(response.data){
+            setAverageQuality(response.data.map((item) => item.averageQuality));
+            setAverageHydration(response.data.map((item) => item.averageHydration));
+          }
+          
+
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
+    getSustainbilityData();
+  }, [])
+  
 
   return (
     <div className="p-6 w-full flex flex-col gap-7">
@@ -119,16 +141,20 @@ function Dashboard() {
       {/* Existing Graphs Section */}
       <div className="flex gap-7">
         <div className="bg-white rounded-xl p-8 flex-1 w-full h-[450px]">
-          <p>{t("sustainability_analysis")}</p>
-          <SustanibilityGraph />
+          <p>{t("Hydration Analysis")}</p>
+          {averageHydration && (
+            <SustanibilityGraph averageHydration={averageHydration} />
+          )}
         </div>
         <div className="bg-white rounded-xl p-8 w-[400px] h-[450px] flex flex-col items-center">
           <DoughnutChart />
         </div>
       </div>
       <div className="bg-white rounded-xl p-8 w-full h-[550px]">
-        <p>{t("Token_Earned_X_Week")}</p>
-        <TokenEarningsBreakdown />
+        <p>{t("Quality Analysis")}</p>
+        {averageQuality && (
+          <TokenEarningsBreakdown averageQuality={averageQuality} />
+        )}
       </div>
     </div>
   );

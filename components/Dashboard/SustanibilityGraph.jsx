@@ -16,35 +16,28 @@ Chart.register(
   LineController
 );
 
-function SustanibilityGraph() {
+function SustanibilityGraph({ averageHydration }) {
   const chartRef = useRef(null);
 
   useEffect(() => {
+    if (!averageHydration) return;
     const ctx = chartRef.current.getContext("2d");
 
     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
     gradient.addColorStop(0, "rgb(24, 153, 118, 0.6)");
     gradient.addColorStop(1, "rgb(24, 153, 118, 0)");
 
+    let label = averageHydration.map(
+      (item, index) => "Week " + (parseInt(index) + 1)
+    );
+    console.log(label);
+
     const data = {
-      labels: [
-        "Week 1",
-        "Week 2",
-        "Week 3",
-        "Week 4",
-        "Week 5",
-        "Week 6",
-        "Week 7",
-        "Week 8",
-        "Week 9",
-        "Week 10",
-        "Week 11",
-        "Week 12",
-      ],
+      labels: label,
       datasets: [
         {
-          label: "Sustainability Score",
-          data: [70, 72, 25, 48, 77, 59, 70, 22, 111, 27, 78, 90],
+          label: "Hydration score",
+          data: averageHydration,
           fill: true,
           backgroundColor: gradient,
           borderColor: "#189976",
@@ -87,7 +80,7 @@ function SustanibilityGraph() {
     return () => myChart.destroy();
   }, []);
 
-  return <canvas ref={chartRef} className="w-full h-fit" ></canvas>;
+  return <canvas ref={chartRef} className="w-full h-fit"></canvas>;
 }
 
 export default SustanibilityGraph;

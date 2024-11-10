@@ -10,7 +10,7 @@ function Advertisements() {
 
     const interval = setInterval(() => {
       setShowPopup(true);
-    }, 5 * 60 * 1000); // 5 minutes in milliseconds
+    }, 1 * 60 * 1000); // 1 minutes in milliseconds
 
     return () => clearInterval(interval);
   }, []);
@@ -24,7 +24,7 @@ function Advertisements() {
           left: 0;
           width: 100%;
           height: 100%;
-          background-color: rgba(0, 0, 0, 0.5);
+          background-color: rgba(0, 0, 0, 0.7);
           display: flex;
           justify-content: center;
           align-items: center;
@@ -74,7 +74,7 @@ function Advertisements() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src="./assets/Images/add.png" alt="Advertisement" />
+              <img src="/assets/Images/add.png" alt="Advertisement" />
             </a>
           </div>
         </div>

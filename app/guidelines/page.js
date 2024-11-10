@@ -8,7 +8,7 @@ const page = () => {
     <div>
       <ParentContainer>
         <Guidelines />
-        <Advertisements />
+        {/* <Advertisements /> */}
       </ParentContainer>
     </div>
   );
