@@ -33,6 +33,9 @@ function Dashboard() {
     }
   };
 
+  console.log(weatherData);
+  
+
   useEffect(() => {
     getLocation();
   }, []);

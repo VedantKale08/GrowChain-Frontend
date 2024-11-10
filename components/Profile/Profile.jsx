@@ -17,6 +17,10 @@ const Profile = () => {
     { name: "Corn", imageUrl: "/assets/Images/corn.png" },
     { name: "Barley", imageUrl: "/assets/Images/barley.png" },
     { name: "Millet", imageUrl: "/assets/Images/millet.png" },
+    { name: "Apple", imageUrl: "/assets/Images/apple.png" },
+    { name: "Banana", imageUrl: "/assets/Images/banana.png" },
+    { name: "Kiwi", imageUrl: "/assets/Images/kiwi.png" },
+    { name: "Litchi", imageUrl: "/assets/Images/litchi.png" },
   ];
     const address = getCookie("address");
 
