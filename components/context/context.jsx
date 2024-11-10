@@ -29,8 +29,9 @@ export const TransactionProvider = ({ children }) => {
         if (!ethereum) return alert("Please install MetaMask!");
         const accounts = await ethereum.request({
           method: "eth_requestAccounts",
-        });
+        });        
         setCurrentAccount(accounts[0]);
+        return accounts[0];
         // toast.success("Wallet Connected Successfully");
       } catch (error) {
         console.error("Wallet connection failed", error);

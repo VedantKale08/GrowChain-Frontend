@@ -1,15 +1,60 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import SustanibilityGraph from "./SustanibilityGraph";
 import DoughnutChart from "./DoughnutChart";
 import { CloudRain, Droplets, Thermometer, ThermometerSun } from "lucide-react";
 import TokenEarningsBreakdown from "./TokenEarningsBreakdown";
 import AOS from "aos";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function Dashboard() {
+  const [weatherData, setWeatherData] = useState();
+  const [location, setLocation] = useState({ latitude: null, longitude: null });
+
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error getting location: ", error);
+          alert("Error getting location");
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  };
+
+  useEffect(()=>{
+    getLocation();
+  },[])
+
   useEffect(() => {
     AOS.init({ duration: 400 });
-  }, []);
+
+    const getWeatherData = async () => {
+      try {
+        if(location.latitude){
+          const response = await axios.get(
+            `https://api.tomorrow.io/v4/weather/forecast?location=${location.latitude},${location.longitude}&apikey=OZarZjsufUBQ7oCi2hQxEghfJhNhb30H`
+          );
+          setWeatherData(response.data.timelines.daily[1].values);
+        }
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
+    getWeatherData();
+  }, [location]);
+  console.log(location);
+  
+  
   return (
     <div className="p-6 w-full flex flex-col gap-7">
       {/* New Weather Information Boxes */}
@@ -21,7 +66,9 @@ function Dashboard() {
           <ThermometerSun size={30} />
           <div className="flex justify-between items-end">
             <div>
-              <div className="text-2xl font-bold">+24°C</div>
+              <div className="text-2xl font-bold">
+                +{weatherData?.temperatureAvg ?? 0}°C
+              </div>
               <p className="text-lg">Air Temp</p>
             </div>
             <div className="mt-2 border border-black rounded-full px-3 py-1">
@@ -36,11 +83,13 @@ function Dashboard() {
           <Droplets size={30} />
           <div className="flex justify-between items-end">
             <div>
-              <div className="text-2xl font-bold">72%</div>
+              <div className="text-2xl font-bold">
+                {weatherData?.precipitationProbabilityAvg ?? 0}%
+              </div>
               <p className="text-lg">Soil Moisture</p>
             </div>
             <div className="mt-2 border border-black rounded-full px-3 py-1">
-              High
+              Low
             </div>
           </div>
         </div>
@@ -51,7 +100,9 @@ function Dashboard() {
           <CloudRain size={30} />
           <div className="flex justify-between items-end">
             <div>
-              <div className="text-2xl font-bold">-2mm</div>
+              <div className="text-2xl font-bold">
+                {weatherData?.precipitationProbabilityAvg ?? 0}mm
+              </div>
               <p className="text-lg">Precipitation</p>
             </div>
             <div className="mt-2 border border-black rounded-full px-3 py-1">

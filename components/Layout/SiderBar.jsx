@@ -9,6 +9,8 @@ import {
   LogOut,
   MessageSquareQuote,
   User,
+  Book,
+  BookAIcon,
 } from "lucide-react";
 import "aos/dist/aos.css";
 import Image from "next/image";
@@ -19,6 +21,7 @@ const SideBar = () => {
   const [popup, setPopup] = useState(false);
   const setTab = tabsStore((state) => state.setTab);
   const tab = tabsStore((state) => state.tab);
+
   const tabs = useMemo(
     () => [
       { name: "Home", icon: Home, link: "/feed" },
@@ -29,6 +32,7 @@ const SideBar = () => {
         icon: MessageSquareQuote,
         link: "/recommendations",
       },
+      {name: "Guidelines", icon:BookAIcon, link: "/guidelines" },
       { name: "Profile", icon: User, link: "/profile" },
     ],
     []

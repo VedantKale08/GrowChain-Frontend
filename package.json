@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "aos": "^2.3.4",
+    "axios": "^1.7.7",
     "chart.js": "^4.4.6",
+    "cookies-next": "^5.0.2",
     "ethers": "^5.7.2",
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.456.0",
