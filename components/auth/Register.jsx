@@ -2,7 +2,7 @@
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { TransactionContext } from "../context/context";
-import axios from 'axios'
+import axios from "axios";
 import { userStore } from "@/store/userStore";
 import { useRouter } from "next/navigation";
 
@@ -14,9 +14,9 @@ const Register = () => {
     selectedCrops: [],
   });
 
-    const setUser = userStore((state) => state.setUser);
+  const setUser = userStore((state) => state.setUser);
 
-    const router = useRouter();
+  const router = useRouter();
 
   // Available crops with images
   const crops = [
@@ -60,7 +60,7 @@ const Register = () => {
       const response = await axios.post(
         "http://localhost:5000/api/farmers/register",
         {
-          address: currentAccount, 
+          address: currentAccount,
           fname: formData.firstName,
           lname: formData.lastName,
           phone_number: formData.phoneNumber,
@@ -75,8 +75,7 @@ const Register = () => {
         selectedCrops: [],
       });
       setUser(response.data);
-      router.push("/feed")
-      
+      router.push("/feed");
     } catch (error) {
       toast.error("Failed to register farmer: " + error.message);
     }
@@ -144,7 +143,7 @@ const Register = () => {
                   }
                   className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-green-500 appearance-none pr-10"
                 >
-                  <option value="" disabled selected className="text-gray-400">
+                  <option value="" disabled className="text-gray-400">
                     Select a crop
                   </option>
                   {crops

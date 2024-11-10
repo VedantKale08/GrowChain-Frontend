@@ -6,29 +6,31 @@ import { TransactionContext } from "@/components/context/context";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { userStore } from "@/store/userStore";
-import {
-  getCookies,
-  setCookie,
-} from "cookies-next/client";
+import { getCookies, setCookie } from "cookies-next/client";
 
 const Landing = () => {
   const { connectWallet } = useContext(TransactionContext);
-const setUser = userStore((state) => state.setUser);
+  const setUser = userStore((state) => state.setUser);
   const router = useRouter();
   const handleLogin = async () => {
-    let currentAccount = await connectWallet();    
+    let currentAccount = await connectWallet();
 
-    try {      
-      const response = await axios.get(`http://localhost:5000/api/farmers/${currentAccount}`);
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/farmers/${currentAccount}`
+      );
 
-      setCookie('address',currentAccount);
+      // console.log(response.status == 404);
+      setCookie("address", currentAccount);
+      if (response.status == 404) {
+        router.push("/role");
+      }
       if (response?.data || response?.data?.length !== 0) {
         router.push("/feed");
         setCookie("userData", JSON.stringify(response.data));
-      } else if (response.status === 404) {
-        router.push("/role");
       }
     } catch (error) {
+      router.push("/role");
       console.error("Error checking user existence:", error);
     }
   };

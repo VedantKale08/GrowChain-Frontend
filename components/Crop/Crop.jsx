@@ -2,12 +2,15 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 import { UploadCloud, X } from "lucide-react";
 import { TransactionContext } from "../context/context";
+import { userStore } from "@/store/userStore";
 
 const Crop = () => {
   const [images, setImages] = useState([]);
   const [cropInfo, setCropInfo] = useState([]);
   const { trackProgress, deletePreviousProgress } =
     useContext(TransactionContext);
+
+  const { user } = userStore();
 
   const handleImageUpload = (event) => {
     const files = Array.from(event.target.files);
@@ -53,28 +56,23 @@ const Crop = () => {
       "HARVEST TRACKING",
     ];
 
-    // Use predefined hash values
     const activityHashes = activities.map((activity) => ({
       activity,
-      hash: predefinedHashes[activity], // Fetch the predefined hash for each activity
+      hash: predefinedHashes[activity],
     }));
 
     try {
       await deletePreviousProgress();
+
       const response = await axios.post(
-        "http://localhost:5000/upload-images",
+        "http://localhost:5001/upload-images",
         formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
 
       const parsedData = response.data.map((item) => JSON.parse(item));
       setCropInfo(parsedData);
 
-      // Calculate averages for numerical fields
       const averageValues = parsedData.reduce(
         (acc, info) => {
           acc.hydration += info.Hydration;
@@ -90,15 +88,12 @@ const Crop = () => {
       const averageQuality = averageValues.quality / averageValues.count;
       const averageTimeLeft = averageValues.timeLeft / averageValues.count;
 
-      // Define sustainability criteria for each activity
       const isSustainable = {
         "WATER CONSERVATION": averageHydration >= 70 && averageQuality >= 80,
-        "CROP ROTATION": averageQuality >= 80 && averageTimeLeft <= 15, // Example condition
-        "PESTICIDE USE": averageQuality >= 85 && averageTimeLeft <= 10, // Example condition
-        // Add similar conditions for other activities
+        "CROP ROTATION": averageQuality >= 80 && averageTimeLeft <= 15,
+        "PESTICIDE USE": averageQuality >= 85 && averageTimeLeft <= 10,
       };
 
-      // Track progress for each qualifying activity
       const sustainableActivities = [];
 
       for (let activity of activities) {
@@ -107,23 +102,27 @@ const Crop = () => {
             (item) => item.activity === activity
           ).hash;
           sustainableActivities.push(activityHash);
-        } else {
-          console.log(
-            `The results for ${activity} are not sustainable. No progress will be tracked.`
-          );
         }
       }
 
-      // Track all sustainable activities at once
       if (sustainableActivities.length > 0) {
         await trackProgress(sustainableActivities);
-      }
+        const isEligible = true;
+        const claimStatus = false;
+        const sustainabilityReasons = sustainableActivities.map((hash) =>
+          activities.find((activity) => predefinedHashes[activity] === hash)
+        );
 
-      // Log generated hashes (for debugging or reference)
-      console.log("Generated activity hashes:", activityHashes);
-      console.log(`Average Hydration: ${averageHydration}%`);
-      console.log(`Average Quality: ${averageQuality}`);
-      console.log(`Average Time Left to Harvest: ${averageTimeLeft} days`);
+        await axios.put(
+          `http://localhost:5000/api/farmers/update-status/${user._id}`,
+          {
+            farmerId: user._id,
+            isEligible,
+            claimStatus,
+            sustainabilityReasons,
+          }
+        );
+      }
     } catch (error) {
       console.error("Error analyzing images:", error);
     }

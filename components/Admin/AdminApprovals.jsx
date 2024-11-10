@@ -3,62 +3,49 @@ import React, { useEffect, useState, useContext } from "react";
 import toast from "react-hot-toast";
 import { TransactionContext } from "../context/context";
 import { ethers } from "ethers";
-
-// Sample data to simulate MongoDB approvals with sustainability factors
-const sampleApprovals = [
-  {
-    _id: "1",
-    farmerAddress: "0x1234...abcd",
-    requestedAmount: "1 ETH",
-    sustainabilityFactors: ["Water Conservation", "Pesticide Reduction"],
-  },
-  {
-    _id: "2",
-    farmerAddress: "0x5678...efgh",
-    requestedAmount: "0.5 ETH",
-    sustainabilityFactors: ["Crop Rotation", "Soil Health Improvement"],
-  },
-  {
-    _id: "3",
-    farmerAddress: "0x9abc...ijkl",
-    requestedAmount: "2 ETH",
-    sustainabilityFactors: ["Biodiversity Support", "Organic Fertilizers"],
-  },
-];
-
-const shortenAddress = (address) => {
-  if (!address) return "";
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
-};
-
-// Mock function to simulate fetching data from an API (replace with actual API call)
-const fetchApprovalsFromDB = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(sampleApprovals), 1000);
-  });
-};
+import axios from "axios"; // Assuming axios is installed
 
 const AdminApprovals = () => {
-  const [approvals, setApprovals] = useState([]);
+  const [farmers, setFarmers] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state for API calls
   const { ownerBalance, fetchOwnerBalance, provideReward } =
     useContext(TransactionContext);
 
-  useEffect(() => {
-    const fetchApprovals = async () => {
-      const data = await fetchApprovalsFromDB();
-      setApprovals(data);
+  const fetchApprovals = async () => {
+    try {
+      setLoading(true); // Set loading to true before fetching data
       await fetchOwnerBalance();
-    };
+    } catch (error) {
+      console.error("Error fetching approvals:", error);
+      toast.error("Failed to fetch approvals");
+    } finally {
+      setLoading(false); // Set loading to false after fetching
+    }
+  };
 
+  useEffect(() => {
     fetchApprovals();
   }, [fetchOwnerBalance]);
+
+  useEffect(() => {
+    const fetchRewards = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/farms/fetch-rewards"
+        );
+        setFarmers(response.data);
+      } catch (error) {
+        console.error("Error fetching rewards data:", error);
+        toast.error("Failed to fetch rewards data");
+      }
+    };
+    fetchRewards();
+  }, []);
 
   const handleAcceptReward = async (approvalId) => {
     try {
       await provideReward();
       toast.success("Reward approved successfully!");
-
-      // Remove the approval from the state after it has been approved
       setApprovals((prevApprovals) =>
         prevApprovals.filter((approval) => approval._id !== approvalId)
       );
@@ -66,6 +53,11 @@ const AdminApprovals = () => {
       toast.error("Failed to approve reward");
       console.error("Reward approval failed", error);
     }
+  };
+
+  const shortenAddress = (address) => {
+    if (!address) return "";
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
   return (
@@ -88,10 +80,9 @@ const AdminApprovals = () => {
         </span>
       </div>
 
-      {/* Approvals List */}
       <div className="space-y-4">
-        {approvals.length > 0 ? (
-          approvals.map((approval) => (
+        {farmers.length > 0 ? (
+          farmers.map((approval) => (
             <div
               key={approval._id}
               className="flex flex-col bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
@@ -99,12 +90,12 @@ const AdminApprovals = () => {
               <div className="flex justify-between items-center">
                 <div>
                   <h2 className="font-semibold text-green-700">
-                    Farmer Address: {shortenAddress(approval.farmerAddress)}
+                    Farmer Address: {shortenAddress(approval.address)}
                   </h2>
                   <p className="text-green-600 text-sm">
                     Reward Committed:{" "}
                     <span className="animate-pulse text-green-700">
-                      {approval.requestedAmount}
+                      {/* {approval.requestedAmount} */}
                     </span>
                   </p>
                 </div>
@@ -122,7 +113,7 @@ const AdminApprovals = () => {
                   Sustainability Factors:
                 </h3>
                 <ul className="list-disc pl-5 text-green-600">
-                  {approval.sustainabilityFactors.map((factor, index) => (
+                  {approval?.sustainabilityReasons?.map((factor, index) => (
                     <li key={index} className="text-sm">
                       {factor}
                     </li>
