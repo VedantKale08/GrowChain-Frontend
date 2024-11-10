@@ -97,7 +97,7 @@ export const TransactionProvider = ({ children }) => {
       const contract = getContract();
       const ownerBalance = await contract.contractBalance();
       setOwnerBalance(ownerBalance);
-      console.log("Owner's balance fetched successfully");
+      // console.log("Owner's balance fetched successfully");
     } catch (error) {
       toast.error("Transaction failed");
       console.error("Transaction error:", error);

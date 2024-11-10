@@ -40,7 +40,8 @@ const fetchApprovalsFromDB = async () => {
 
 const AdminApprovals = () => {
   const [approvals, setApprovals] = useState([]);
-  const { ownerBalance, fetchOwnerBalance } = useContext(TransactionContext);
+  const { ownerBalance, fetchOwnerBalance, provideReward } =
+    useContext(TransactionContext);
 
   useEffect(() => {
     const fetchApprovals = async () => {
@@ -54,8 +55,13 @@ const AdminApprovals = () => {
 
   const handleAcceptReward = async (approvalId) => {
     try {
-      // Add logic to approve reward through contract here, passing approvalId if needed.
+      await provideReward();
       toast.success("Reward approved successfully!");
+
+      // Remove the approval from the state after it has been approved
+      setApprovals((prevApprovals) =>
+        prevApprovals.filter((approval) => approval._id !== approvalId)
+      );
     } catch (error) {
       toast.error("Failed to approve reward");
       console.error("Reward approval failed", error);
@@ -75,7 +81,9 @@ const AdminApprovals = () => {
         </span>
         <span className="font-semibold text-lg text-green-800">
           {ownerBalance
-            ? `${ethers.utils.parseEther(ownerBalance)} ETH`
+            ? `${parseFloat(ethers.utils.formatEther(ownerBalance)).toFixed(
+                4
+              )} ETH`
             : "Loading..."}
         </span>
       </div>
