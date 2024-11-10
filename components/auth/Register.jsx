@@ -1,5 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import toast from "react-hot-toast";
+import { TransactionContext } from "../context/context";
+import axios from 'axios'
+import { userStore } from "@/store/userStore";
+import { useRouter } from "next/navigation";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +13,10 @@ const Register = () => {
     phoneNumber: "",
     selectedCrops: [],
   });
+
+    const setUser = userStore((state) => state.setUser);
+
+    const router = useRouter();
 
   // Available crops with images
   const crops = [
@@ -42,6 +51,35 @@ const Register = () => {
         (crop) => crop.name !== cropName
       ),
     }));
+  };
+
+  const { currentAccount } = useContext(TransactionContext);
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/farmers/register",
+        {
+          address: currentAccount, 
+          fname: formData.firstName,
+          lname: formData.lastName,
+          phone_number: formData.phoneNumber,
+          selectedCrops: formData.selectedCrops.map((crop) => crop.name),
+        }
+      );
+      toast.success("Farmer registered successfully!");
+      setFormData({
+        firstName: "",
+        lastName: "",
+        phoneNumber: "",
+        selectedCrops: [],
+      });
+      setUser(response.data);
+      router.push("/feed")
+      
+    } catch (error) {
+      toast.error("Failed to register farmer: " + error.message);
+    }
   };
 
   return (
@@ -166,7 +204,7 @@ const Register = () => {
             {/* Submit Button */}
             <div className="flex justify-center mt-6">
               <button
-                type="submit"
+                onClick={handleSubmit}
                 className="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
               >
                 Submit

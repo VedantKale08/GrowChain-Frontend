@@ -1,14 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export const tabsStore = create(
+export const userStore = create(
   persist(
     (set) => ({
-      tab: "Home",
-      setTab: (data) => set(() => ({ tab: data })),
+      user: null,
+      setUser: (data) => set(() => ({ user: data })),
     }),
     {
-      name: "tabs-storage",
+      name: "user-storage",
       getStorage: () => localStorage,
     }
   )
