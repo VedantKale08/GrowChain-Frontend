@@ -99,17 +99,24 @@ const Crop = () => {
       };
 
       // Track progress for each qualifying activity
+      const sustainableActivities = [];
+
       for (let activity of activities) {
         if (isSustainable[activity]) {
           const activityHash = activityHashes.find(
             (item) => item.activity === activity
           ).hash;
-          await trackProgress(activityHash);
+          sustainableActivities.push(activityHash);
         } else {
           console.log(
             `The results for ${activity} are not sustainable. No progress will be tracked.`
           );
         }
+      }
+
+      // Track all sustainable activities at once
+      if (sustainableActivities.length > 0) {
+        await trackProgress(sustainableActivities);
       }
 
       // Log generated hashes (for debugging or reference)

@@ -85,7 +85,7 @@ export const TransactionProvider = ({ children }) => {
   const trackProgress = async (activityHash) => {
     try {
       const contract = getContract();
-      await contract.trackPractice(activityHash);
+      await contract.trackPractices(activityHash);
       toast.success("Progress tracked successfully!");
     } catch (error) {
       toast.error("Transaction failed");
