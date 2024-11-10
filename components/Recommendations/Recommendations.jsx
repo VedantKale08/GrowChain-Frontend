@@ -1,6 +1,9 @@
 "use client";
 
-import React from "react";
+import axios from "axios";
+import { getCookie } from "cookies-next";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { FaLeaf, FaTint, FaSeedling } from "react-icons/fa";
 
@@ -14,107 +17,36 @@ const mapQualityToCategory = (quality) => {
   return "Poor";
 };
 
-const cropsData = [
-  {
-    name: "Wheat",
-    stage: "Reproductive",
-    quality: 90, // Number representing quality
-    moisturer: "45%",
-    fertilizer: "Organic",
-    date: "1st Oct 2024",
-    recommendation: "Increase moisture by 10%",
-    icon: <FaTint />,
-    imageUrl: "./assets/Images/wheat.png",
-  },
-  {
-    name: "Corn",
-    stage: "Vegetative",
-    quality: 65,
-    moisturer: "60%",
-    fertilizer: "Compost",
-    date: "1st Nov 2024",
-    recommendation: "Add more compost",
-    icon: <FaLeaf />,
-    imageUrl: "./assets/Images/corn.png",
-  },
-  {
-    name: "Millet",
-    stage: "Growth",
-    quality: 45,
-    moisturer: "50%",
-    fertilizer: "Manure",
-    date: "17th Oct 2024",
-    recommendation: "Thin the plants",
-    icon: <FaSeedling />,
-    imageUrl: "./assets/Images/millet.png",
-  },
-  {
-    name: "Ragi",
-    stage: "Reproductive",
-    quality: 80,
-    moisturer: "45%",
-    fertilizer: "Organic",
-    date: "15th May 2024",
-    recommendation: "Increase moisture by 10%",
-    icon: <FaTint />,
-    imageUrl: "./assets/Images/ragi.png",
-  },
-  {
-    name: "Apple",
-    stage: "Reproductive",
-    quality: 90, // Number representing quality
-    moisturer: "45%",
-    fertilizer: "Organic",
-    date: "23rd Oct 2024",
-    recommendation: "Increase moisture by 10%",
-    icon: <FaTint />,
-    imageUrl: "./assets/Images/apple.png",
-  },
-  {
-    name: "Banana",
-    stage: "Vegetative",
-    quality: 65,
-    moisturer: "60%",
-    fertilizer: "Compost",
-    date: "27th Nov 2024",
-    recommendation: "Add more compost",
-    icon: <FaLeaf />,
-    imageUrl: "./assets/Images/banana.png",
-  },
-  {
-    name: "Kiwi",
-    stage: "Growth",
-    quality: 45,
-    moisturer: "50%",
-    fertilizer: "Manure",
-    date: "11th Oct 2024",
-    recommendation: "Thin the plants",
-    icon: <FaSeedling />,
-    imageUrl: "./assets/Images/kiwi.png",
-  },
-  {
-    name: "Litchi",
-    stage: "Reproductive",
-    quality: 80,
-    moisturer: "45%",
-    fertilizer: "Organic",
-    date: "31st May 2024",
-    recommendation: "Increase moisture by 10%",
-    icon: <FaTint />,
-    imageUrl: "./assets/Images/litchi.png",
-  },
-];
-
 const RecommendationsCard = ({ crop }) => {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
+  const date = new Date(crop.date);
+  const formattedDate = date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+
+  let map = {
+    Wheat:
+      "https://img.freepik.com/free-photo/beautiful-shot-whet-field-with-cloudy-sky_181624-26320.jpg",
+    Corn: "/assets/Images/crops.jpg",
+    Ragi: "https://www.agrifarming.in/wp-content/uploads/Guide-to-Finger-Millet-Cultivation-2.jpg",
+    Millet: "https://www.zettafarms.com/wp-content/uploads/2024/01/blog-7.jpg",
+    Barley:
+      "https://images.pexels.com/photos/29021995/pexels-photo-29021995/free-photo-of-scenic-barley-field-under-vibrant-blue-sky.png?auto=compress&cs=tinysrgb&dpr=1&w=500",
+    Apple: "/assets/Images/apple.png",
+    Banana: "/assets/Images/banana.png",
+    Kiwi: "/assets/Images/kiwi.png",
+    Litchi: "/assets/Images/litchi.png",
+  };
 
   return (
     <div style={styles.card}>
       <div
-        style={{ ...styles.header, backgroundImage: `url(${crop.imageUrl})` }}
+        style={{ ...styles.header, backgroundImage: `url(${map[crop.crop]})` }}
       >
         <div style={styles.overlay}>
-          <h2 style={styles.cardTitle}>{crop.name}</h2>
+          <h2 style={styles.cardTitle}>{crop.crop}</h2>
         </div>
       </div>
       <div style={styles.infoRow}>
@@ -122,28 +54,50 @@ const RecommendationsCard = ({ crop }) => {
         <span>{mapQualityToCategory(crop.quality)}</span>
       </div>
       <div style={styles.infoRow}>
-        <span>{t("moisture")}:</span> <span>{crop.moisturer}</span>
+        <span>{t("moisture")}:</span> <span>{crop.moisture}</span>
       </div>
       <div style={styles.infoRow}>
         <span>{t("fertilizer")}:</span> <span>{crop.fertilizer}</span>
       </div>
       <div style={styles.infoRow}>
-        <span>{t("date")}:</span> <span>{crop.date}</span>
+        <span>{t("date")}:</span> <span>{formattedDate}</span>
       </div>
       <div style={styles.recommendation}>
-        {crop.icon}
-        <span style={{ marginLeft: "8px" }}>{crop.recommendation}</span>
+        <FaLeaf/>
+        <span style={{ marginLeft: "8px" }}>{crop.desc}</span>
       </div>
     </div>
-  );};
+  );
+};
 
-const Recommendations = () => (  
-  <div style={styles.container} className="grid-cols-4">
-    {cropsData.map((crop, index) => (
-      <RecommendationsCard key={index} crop={crop} />
-    ))}
-  </div>
-);
+const Recommendations = () => {
+  const [cropsData,setCropsData] = useState();
+  const userData = JSON.parse(getCookie("userData"));
+  useEffect(() => {
+    const getRecommendedData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/activity/farmer/" + userData._id
+        );
+
+        setCropsData(response.data);
+        console.log(response.data);
+        
+      } catch (error) {
+        toast.error("Something went wrong!")
+      }
+    };
+    getRecommendedData();
+  }, []);
+
+  return (
+    <div style={styles.container} className="grid-cols-4">
+      {cropsData && cropsData.map((crop, index) => (
+        <RecommendationsCard key={index} crop={crop} />
+      ))}
+    </div>
+  );
+};
 
 const styles = {
   container: {

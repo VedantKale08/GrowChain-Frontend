@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 function Navbar() {
   const setTab = tabsStore((state) => state.setTab);
   const [user, setUser] = useState();
-  const [language, setLanguage] = useState("");
+  const [language, setLanguage] = useState("en");
   const router = useRouter();
 
   useEffect(()=>{
