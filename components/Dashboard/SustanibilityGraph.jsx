@@ -62,7 +62,7 @@ function SustanibilityGraph({ averageHydration }) {
             beginAtZero: true,
             title: {
               display: true,
-              text: "Sustainability Score",
+              text: "Hydration",
             },
           },
           x: {

@@ -38,10 +38,10 @@ function TokenEarningsBreakdown({ averageQuality }) {
       labels: label,
       datasets: [
         {
-          label: "Tokens Earned",
+          label: "Quality",
           data: averageQuality,
           backgroundColor: averageQuality.map(() => getRandomGreen()),
-          borderColor: averageQuality.map(() => "rgba(0, 128, 0, 1)"), 
+          borderColor: averageQuality.map(() => "rgba(0, 128, 0, 1)"),
           borderWidth: 1,
         },
       ],
@@ -65,7 +65,7 @@ function TokenEarningsBreakdown({ averageQuality }) {
             beginAtZero: true,
             title: {
               display: true,
-              text: "Tokens Earned",
+              text: "Quality",
             },
           },
           x: {

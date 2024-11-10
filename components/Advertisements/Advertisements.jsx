@@ -10,7 +10,7 @@ function Advertisements() {
 
     const interval = setInterval(() => {
       setShowPopup(true);
-    }, 1 * 60 * 1000); // 1 minutes in milliseconds
+    }, 3 * 60 * 1000); // 1 minutes in milliseconds
 
     return () => clearInterval(interval);
   }, []);
