@@ -55,7 +55,7 @@ const Reward = () => {
       {farmer.error ? (
         <p>{farmer.error}</p>
       ) : (
-        <div className="p-6 bg-white border flex flex-col justify-between rounded-lg shadow-lg">
+        <div className="p-6 bg-white border flex flex-col justify-between rounded-lg shadow-lg w-1/2">
           <div>
             <h2 className="text-xl font-semibold text-primary">
               {t("Farmer_Address")}: {farmer.address}
